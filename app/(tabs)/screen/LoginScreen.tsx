@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, Text, StyleSheet, Alert } from 'react-native';
 import { FIREBASE_AUTH } from '../firebaseConfig'; 
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword, GoogleAuthProvider, FacebookAuthProvider, signInWithPopup } from 'firebase/auth';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../index'; 
@@ -20,6 +20,28 @@ const LoginScreen = () => {
       navigation.navigate('Welcome'); 
     } catch (error: any) {
       Alert.alert('Đăng nhập thất bại', error.message);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      const provider = new GoogleAuthProvider();
+      await signInWithPopup(FIREBASE_AUTH, provider);
+      Alert.alert('Đăng nhập bằng Google thành công!');
+      navigation.navigate('Welcome'); 
+    } catch (error: any) {
+      Alert.alert('Đăng nhập bằng Google thất bại', error.message);
+    }
+  };
+
+  const handleFacebookLogin = async () => {
+    try {
+      const provider = new FacebookAuthProvider();
+      await signInWithPopup(FIREBASE_AUTH, provider);
+      Alert.alert('Đăng nhập bằng Facebook thành công!');
+      navigation.navigate('Welcome'); 
+    } catch (error: any) {
+      Alert.alert('Đăng nhập bằng Facebook thất bại', error.message);
     }
   };
 
@@ -45,6 +67,12 @@ const LoginScreen = () => {
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Đăng Nhập</Text>
       </TouchableOpacity>
+      <TouchableOpacity style={styles.button} onPress={handleGoogleLogin}>
+        <Text style={styles.buttonText}>Đăng Nhập bằng Google</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.button} onPress={handleFacebookLogin}>
+        <Text style={styles.buttonText}>Đăng Nhập bằng Facebook</Text>
+      </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
         <Text style={styles.linkText}>Đăng Ký Tài Khoản</Text>
       </TouchableOpacity>
@@ -60,14 +88,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     padding: 20,
-    backgroundColor: '#e0f7fa', // màu nền tươi sáng
+    backgroundColor: '#e0f7fa',
   },
   title: {
     fontSize: 32,
     fontWeight: 'bold',
     marginBottom: 30,
     textAlign: 'center',
-    color: '#00796b', // màu tiêu đề đẹp
+    color: '#00796b',
   },
   input: {
     height: 50,
@@ -76,12 +104,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     marginBottom: 20,
     fontSize: 18,
-    borderColor: '#00796b', // viền xanh nhẹ
+    borderColor: '#00796b',
     borderWidth: 1,
   },
   button: {
     height: 50,
-    backgroundColor: '#00796b', // màu xanh đậm
+    backgroundColor: '#00796b',
     borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
